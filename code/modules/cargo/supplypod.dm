@@ -6,13 +6,13 @@
 	pixel_x = -16 //2x2 sprite
 	pixel_y = -5
 	layer = TABLE_LAYER //So that the crate inside doesn't appear underneath
-	allow_objects = TRUE
-	allow_dense = TRUE
-	delivery_icon = null
-	can_weld_shut = FALSE
+	//allow_objects = TRUE
+	//allow_dense = TRUE
+	//delivery_icon = null
+	//can_weld_shut = FALSE
 	armor = list("melee" = 30, "bullet" = 50, "laser" = 50, "energy" = 100, "bomb" = 100, "bio" = 0, "rad" = 0, "fire" = 100, "acid" = 80)
 	anchored = TRUE //So it cant slide around after landing
-	anchorable = FALSE
+	//anchorable = FALSE
 	//*****NOTE*****: Many of these comments are similarly described in centcom_podlauncher.dm. If you change them here, please consider doing so in the centcom podlauncher code as well!
 	var/adminNamed = FALSE //Determines whether or not the pod has been named by an admin. If true, the pod's name will not get overridden when the style of the pod changes (changing the style of the pod normally also changes the name+desc)
 	var/bluespace = FALSE //If true, the pod deletes (in a shower of sparks) after landing
@@ -27,7 +27,7 @@
 	var/effectQuiet = FALSE //The female sniper. If true, the pod makes no noise (including related explosions, opening sounds, etc)
 	var/effectMissile = FALSE //If true, the pod deletes the second it lands. If you give it an explosion, it will act like a missile exploding as it hits the ground
 	var/effectCircle = FALSE //If true, allows the pod to come in at any angle. Bit of a weird feature but whatever its here
-	var/style = STYLE_STANDARD //Style is a variable that keeps track of what the pod is supposed to look like. It acts as an index to the POD_STYLES list in cargo.dm defines to get the proper icon/name/desc for the pod.
+	//var/style = STYLE_STANDARD //Style is a variable that keeps track of what the pod is supposed to look like. It acts as an index to the POD_STYLES list in cargo.dm defines to get the proper icon/name/desc for the pod.
 	var/reversing = FALSE //If true, the pod will not send any items. Instead, after opening, it will close again (picking up items/mobs) and fly back to centcom
 	var/landingSound //Admin sound to play when the pod lands
 	var/openingSound //Admin sound to play when the pod opens
@@ -35,3 +35,14 @@
 	var/soundVolume = 50 //Volume to play sounds at. Ignores the cap
 	var/bay //Used specifically for the centcom_podlauncher datum. Holds the current bay the user is launching objects from. Bays are specific rooms on the centcom map.
 	var/list/explosionSize = list(0,0,2,3)
+
+
+/obj/structure/closet/supplypod/take_contents()
+	var/itemcount = 0
+	for(var/obj/I in loc)
+		if(I == src) continue
+		I.forceMove(src)
+		// Ensure the storage cap is respected
+		if(++itemcount >= storage_capacity)
+			break
+
